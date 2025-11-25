@@ -1,10 +1,10 @@
 # DevSignal (v0.1.0-alpha)
 
-The Open Source Discovery Engine. > A gamified platform connecting developers seeking experience with maintainers seeking contributors.
+The Open Signal Discovery Engine. > A gamified platform connecting developers seeking experience with maintainers seeking contributors.
 
 ## 💻 The Concept
 
-DevSource is a web platform designed to feel like home—specifically, your IDE. It acts as a social layer on top of GitHub, allowing developers to:
+DevSignal is a web platform designed to feel like home—specifically, your IDE. It acts as a social layer on top of GitHub, allowing developers to:
 
 - Discover Projects: Find "Help Wanted" issues and projects formatted like code cards.
 
@@ -39,10 +39,10 @@ Follow these instructions to get the project running on your local machine.
 2. Installation
 ```
 # Clone the repository
-git clone [https://github.com/your-username/devsource.git](https://github.com/your-username/devsource.git)
+git clone [https://github.com/your-username/devsignal.git](https://github.com/your-username/devsignal.git)
 
 # Navigate into the directory
-cd devsource
+cd devsignal
 
 # Install dependencies
 npm install
