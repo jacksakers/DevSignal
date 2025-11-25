@@ -1,0 +1,202 @@
+MVP Implementation Plan: "DevSource"
+
+Phase: 0 (Initialization)
+Goal: Scaffold the codebase, configure the visual theme, and connect to Firebase.
+
+1. Environment Setup & Scaffolding
+
+We will use Vite with the React + TypeScript template for maximum speed and strict typing.
+
+Step 1.1: Initialize Project
+
+Run the following in your terminal:
+
+# Create the project
+npm create vite@latest dev-source -- --template react-ts
+
+# Enter directory
+cd dev-source
+
+# Install core dependencies
+npm install
+
+# Install Routing & Firebase
+npm install react-router-dom firebase clsx tailwind-merge
+
+
+Step 1.2: Install Styling Engine
+
+We need Tailwind CSS to handle our "Code Theme".
+
+# Install Tailwind and its peers
+npm install -D tailwindcss postcss autoprefixer
+
+# Generate config files
+npx tailwindcss init -p
+
+
+2. Configuring the "VS Code" Theme
+
+This is the most critical visual step. We will hardcode the VS Code Dark+ color palette into the Tailwind configuration so developers can use classes like bg-editor-main or text-syntax-keyword.
+
+Action: Update tailwind.config.js with the following content:
+
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        // Backgrounds
+        editor: {
+          main: '#1e1e1e',    // Main window background
+          side: '#252526',    // Sidebar background
+          active: '#37373d',  // Active tab/list item
+          input: '#3c3c3c',   // Input fields
+          border: '#3e3e42',  // Subtle borders
+        },
+        // Syntax Highlighting (Text Colors)
+        syntax: {
+          default: '#d4d4d4', // Variables/Standard text
+          keyword: '#569cd6', // "const", "function", "import" (Blue)
+          string: '#ce9178',  // "descriptions" (Orange)
+          number: '#b5cea8',  // Dates, Stats (Light Green)
+          control: '#c586c0', // Buttons, "return", "if" (Purple)
+          function: '#dcdcaa',// Project Titles (Yellow)
+          comment: '#6a9955', // Meta data (Green)
+        },
+        // UI Accents
+        accent: {
+          primary: '#007acc', // "Git Push" Blue
+          hover: '#0062a3',
+          error: '#f48771',   // Git Conflicts/Errors
+          added: '#81b88b',   // Git Added (+)
+          modified: '#e2c08d',// Git Modified (M)
+        }
+      },
+      fontFamily: {
+        // Use for headers, code blocks, and UI elements
+        mono: ['"Fira Code"', '"JetBrains Mono"', 'Consolas', 'monospace'],
+        // Use for long-form reading (descriptions)
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+      }
+    },
+  },
+  plugins: [],
+}
+
+
+Action: Update src/index.css to enforce the dark theme globally:
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  background-color: #1e1e1e;
+  color: #d4d4d4;
+  font-family: 'Inter', sans-serif; /* Default to readable font */
+  overflow: hidden; /* App-like feel, manage scroll internally */
+}
+
+/* Force specific elements to use mono */
+h1, h2, h3, h4, button, .code-font {
+  font-family: 'Fira Code', monospace;
+}
+
+
+3. Directory Structure Implementation
+
+To strictly follow the "One Function Per File" guideline, we must clean up the default Vite structure and establish our Domain-driven layout.
+
+Step 3.1: Clean Up
+
+Delete src/assets/react.svg.
+
+Delete src/App.css.
+
+Clear the contents of src/App.tsx.
+
+Step 3.2: Create Folders
+
+Run these commands (or create manually) to build the skeleton:
+
+# Feature Domains
+mkdir -p src/features/feed/components
+mkdir -p src/features/feed/logic
+mkdir -p src/features/feed/hooks
+
+mkdir -p src/features/profile/components
+mkdir -p src/features/profile/logic
+
+# Shared Atoms
+mkdir -p src/shared/components
+mkdir -p src/shared/utils/date
+mkdir -p src/shared/utils/string
+
+# Services
+mkdir -p src/services/auth
+mkdir -p src/services/firestore
+mkdir -p src/services/github
+
+
+4. Firebase Initialization
+
+Step 4.1: Firebase Console
+
+Go to console.firebase.google.com.
+
+Create a project named "DevSource".
+
+Enable Authentication -> Sign-in method -> GitHub.
+
+Enable Firestore Database -> Start in Test Mode (for MVP development).
+
+Step 4.2: Project Config
+
+Create src/firebase.ts. This will be the only file that initializes the app instance.
+
+// src/firebase.ts
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID
+};
+
+const app = initializeApp(firebaseConfig);
+
+export const auth = getAuth(app);
+export const db = getFirestore(app);
+
+
+Step 4.3: Environment Variables
+
+Create a .env.local file in the root directory:
+
+VITE_FIREBASE_API_KEY=your_api_key_here
+VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=dev-source-xyz
+...
+
+
+5. Next Steps (Development Sequence)
+
+Authentication: Build src/services/auth/loginWithGithub.ts and a simple Login UI.
+
+Layout: Build the "Activity Bar" and "Sidebar" components in src/shared/components.
+
+Feed: Create the ProjectCard.tsx using the Tailwind syntax colors defined in step 2.

@@ -1,0 +1,187 @@
+Coding Guidelines & Architecture Standards: "DevSignal"
+
+Version: 1.0
+Stack: React (Vite), TypeScript, Tailwind CSS, Firebase
+Core Philosophy: Atomic Modularity & Strict Documentation
+
+1. Core Philosophy: The Atomic Rule
+
+To maintain the highest level of modularity and readability, this project enforces a One Function Per File rule.
+
+Files are Actions: A file should not be a collection of loosely related utilities. It should represent a single, testable unit of logic or UI.
+
+Predictability: If you need to calculateUserXP, the file is named calculateUserXP.js. You do not look inside userUtils.js.
+
+Imports: Imports become explicit. You import exactly what you use, reducing bundle size and cognitive load.
+
+2. Directory Structure
+
+Because of the file-count explosion caused by "One Function Per File," directory organization is paramount. We group by Domain, then by Type.
+
+src/
+├── features/               # Large feature domains
+│   ├── feed/
+│   │   ├── components/     # UI Components (One per file)
+│   │   │   ├── ProjectCard.jsx
+│   │   │   └── FeedList.jsx
+│   │   ├── logic/          # Pure logic functions
+│   │   │   ├── filterProjectsByTag.js
+│   │   │   └── sortProjectsByDate.js
+│   │   └── hooks/          # React Hooks
+│   │       └── useFeedData.js
+├── shared/                 # Reusable global atoms
+│   ├── components/
+│   │   ├── Button.jsx
+│   │   └── SyntaxHighlighter.jsx
+│   └── utils/
+│       ├── date/
+│       │   ├── formatDateRelative.js
+│       │   └── isDateInPast.js
+│       └── string/
+│           └── truncateText.js
+└── services/               # Firebase Interactions
+    ├── auth/
+    │   ├── loginWithGithub.js
+    │   └── logoutUser.js
+    └── firestore/
+        ├── fetchProjectById.js
+        └── addLikeToProject.js
+
+
+3. Documentation Standards (JSDoc)
+
+Mandatory: Every exported function, hook, or component MUST have a JSDoc block immediately preceding it.
+
+Format
+
+The comment must explain:
+
+What the function does (Description).
+
+Inputs (@param): Data type and purpose.
+
+Outputs (@returns): Data type and result.
+
+Example: Logic Function
+
+/**
+ * Calculates the total experience points for a user based on interactions.
+ * Applies a multiplier for contributions made to "Gold" tier projects.
+ *
+ * @param {number} basePoints - The raw points from likes/comments.
+ * @param {boolean} isGoldTier - Whether the project is a featured project.
+ * @returns {number} The final calculated score.
+ */
+export const calculateXP = (basePoints: number, isGoldTier: boolean): number => {
+  if (isGoldTier) return basePoints * 2;
+  return basePoints;
+};
+
+
+Example: React Component
+
+/**
+ * Renders a code-styled button that mimics a terminal command.
+ *
+ * @param {string} label - The text to display (e.g., "git push").
+ * @param {() => void} onClick - Handler for click events.
+ * @param {boolean} [primary=false] - If true, uses the blue accent color.
+ * @returns {JSX.Element} A styled button component.
+ */
+export const CodeButton = ({ label, onClick, primary = false }: CodeButtonProps): JSX.Element => {
+  // Implementation
+};
+
+
+4. SOLID Principles Implementation
+
+S - Single Responsibility Principle (SRP)
+
+Rule: A component renders UI. A hook handles state. A service handles API calls.
+
+Violation: ProjectCard.jsx fetching data inside useEffect.
+
+Correction: ProjectCard.jsx receives data via props. The parent uses useProjectData.js to fetch it.
+
+O - Open/Closed Principle
+
+Rule: Components should be open for extension (via props) but closed for modification.
+
+Implementation: Do not hardcode styles inside a shared component. Accept a className prop to allow the consumer to append styles, or accept a renderItem prop to customize list rendering.
+
+L - Liskov Substitution Principle
+
+Implementation: If a component accepts a prop interface (e.g., Clickable), any component implementing that interface should work without breaking the app. Ensure prop types are strict Interfaces, not any.
+
+I - Interface Segregation
+
+Rule: Do not pass the entire User object to a component that only needs the username.
+
+Implementation:
+
+Bad: props: { user: UserObject }
+
+Good: props: { username: string; avatarUrl: string }
+
+D - Dependency Inversion
+
+Rule: High-level modules should not depend on low-level modules.
+
+Implementation: Use Custom Hooks as the abstraction layer. Components should not import firebase/firestore directly. They should import useFirestoreCollection, which handles the implementation details.
+
+5. DRY (Don't Repeat Yourself) & Code Reuse
+
+Logic Extraction
+
+If you write the same if/else logic in two different components, extract it to a logic file immediately.
+
+Scenario: Formatting a GitHub repo URL to show just the user/repo string.
+
+Action: Create src/shared/utils/string/formatRepoName.js.
+
+Styling Abstraction (Tailwind)
+
+Since we are using specific "Code Colors" repeatedly, do not repeat hex codes.
+
+Config: Define colors in tailwind.config.js.
+
+Usage: Use text-syntax-keyword or bg-editor-bg instead of text-[#569cd6].
+
+6. Naming Conventions
+
+Files:
+
+React Components: PascalCase.jsx (e.g., ProjectCard.jsx)
+
+Logic/Utils/Hooks: camelCase.js (e.g., calculateXP.js, useAuth.js)
+
+Variables: camelCase (e.g., currentUser, isLoading)
+
+Booleans: Must be questions. (e.g., isVisible, hasError, canSubmit)
+
+Constants: UPPER_SNAKE_CASE (e.g., MAX_TAGS_PER_POST)
+
+7. State Management Guidelines
+
+To keep the application "standard" and readable:
+
+Local State: Use useState for simple UI toggles (dropdowns, modals).
+
+Server State: Use Custom Hooks that wrap Firebase listeners. Do not store server data in global Redux/Context unless absolutely necessary.
+
+Global UI State: Use React Context only for global themes or the authenticated User object.
+
+8. Error Handling
+
+Every Service/API function must return a standardized tuple or object to prevent unhandled promise rejections.
+
+// Pattern:
+return { data: T | null, error: string | null };
+
+
+This forces the consumer to check for errors explicitly:
+
+const { data, error } = await fetchProjectById(id);
+if (error) {
+  // Handle UI error state
+}

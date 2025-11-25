@@ -1,0 +1,180 @@
+Visual Design Specification: "DevSignal"
+
+Version: 1.0
+Theme: "The IDE as UI"
+Core Inspiration: VS Code (Dark+), JIRA, Linear
+Target Device: Desktop / Wide-screen Monitors
+
+1. Design Philosophy
+
+The goal is to eliminate the context switch between the developer's work environment (the IDE) and their discovery environment (this platform). The interface should feel like an extension of the editor—utilitarian, information-dense, and distinctively "engineered."
+
+Comfort: Dark mode by default (and only). Low contrast backgrounds, high contrast text for readability.
+
+Familiarity: UI elements should behave like IDE components (tabs, command palettes, split panes).
+
+Density: Unlike modern whitespace-heavy web 2.0 apps, this app embraces information density similar to JIRA or Trello.
+
+2. Color Palette (VS Code Dark+ Scheme)
+
+We will adhere strictly to a coding color scheme. Colors usually reserved for syntax highlighting will be used for UI hierarchy.
+
+Backgrounds:
+
+#1e1e1e: Main Editor Background (Center Stage)
+
+#252526: Activity Bar / Sidebars (Secondary Background)
+
+#333333: Input Fields / Search Bars
+
+#007acc: Accent / Selection Blue (The "Status Bar" Blue)
+
+Syntax / Text Colors:
+
+#d4d4d4: Default Text (Variables)
+
+#569cd6: Keywords (Blue - e.g., Headers, "function", "const")
+
+#ce9178: Strings (Orange/Brown - e.g., Descriptions, User Input)
+
+#b5cea8: Numbers (Light Green - e.g., Dates, Stats, Likes)
+
+#c586c0: Control Flow (Pink/Purple - e.g., "if", "return", Action Buttons)
+
+#dcdcaa: Functions (Yellow - e.g., Actionable links, Project Titles)
+
+#6a9955: Comments (Green - e.g., Helper text, metadata, tooltips)
+
+3. Typography
+
+Primary Font (Code): Fira Code, JetBrains Mono, or Consolas.
+
+Used for: Headers, Project Titles, Navigation, Buttons, Tags, Usernames.
+
+Feature: Ligatures should be enabled if possible (=>, ===).
+
+Secondary Font (Readability): Inter or Segoe UI (System Sans).
+
+Used for: Long-form project descriptions and README rendering (to reduce eye strain), but colored to match the syntax theme.
+
+4. Layout & Structure (The "JIRA" Influence)
+
+The layout will be a fixed-viewport "Dashboard" rather than a scrolling document. It implies a workspace, not a webpage.
+
+A. The "Activity Bar" (Far Left - Fixed)
+
+Width: Narrow (~50px).
+
+Appearance: Darkest gray background (#333333).
+
+Content: Vertical stack of Icons (Home, My Contributions, Settings, Profile).
+
+State: The active icon has a white border-left indicator, mimicking VS Code active tabs.
+
+B. The "Explorer" / Navigation (Left Sidebar - Collapsible)
+
+Width: Resizable or Fixed (~250px).
+
+Content: "Open Editors" (Recent Projects), "Workspace" (Filters, Tags, Categories).
+
+Style: Tree-view structure with chevrons (>) for expanding categories.
+
+C. The "Main Editor" (Center - Scrollable)
+
+Content: The Project Feed or The Project Detail view.
+
+Tabs: Top of this section features "Tabs" (e.g., main.js, Search Results, Project_Name.readme).
+
+Visuals:
+
+Background is #1e1e1e.
+
+Scrollbars are custom styled (thin, dark overlay).
+
+D. The "Inspector" (Right Panel - Contextual)
+
+Inspiration: JIRA Ticket Detail View.
+
+Function: When a project card is clicked, it opens here (or splits the screen) instead of navigating away.
+
+Content: Contributors list, "Help Wanted" tickets, git clone commands.
+
+5. UI Component Styling (The "Code" Look)
+
+1. "Syntax Highlighted" Cards
+
+Project cards in the feed should not look like standard material design cards. They should look like JSON objects or code blocks.
+
+Border: 1px solid #3e3e42 (Subtle).
+
+Title: <span style="color: #dcdcaa">ProjectName</span>
+
+Author: <span style="color: #569cd6">const</span> author = ...
+
+Description: Rendered as a comment block /** Description... */ or a string "Description...".
+
+2. Buttons & Actions
+
+Primary Action (Like/Apply): Looks like a function call or a run button.
+
+Text: git push (Submit) or npm install (Join).
+
+Color: #007acc background, white text.
+
+Secondary Action: Outlined.
+
+Style: border: 1px solid #c586c0 (Purple), Text is purple.
+
+3. Navigation "Breadcrumbs"
+
+Instead of Home > Projects > React, use file paths: ~/projects/react/.
+
+4. Status Indicators
+
+Use "Git" iconography.
+
+New/Added: Green + or U (Untracked).
+
+Modified/Active: Yellow M.
+
+Error/Issue: Red x.
+
+6. Mobile vs. Desktop Strategy
+
+Desktop (Primary):
+
+Three-column layout (Nav | Content | Details).
+
+Dense data grids.
+
+Hover states trigger "Intellisense" style popups.
+
+Mobile (Secondary - "Read Only"):
+
+Collapses sidebars into a hamburger menu (styled like a command palette icon).
+
+Single column feed.
+
+Code blocks wrap; Font size increases slightly.
+
+Note: Mobile is for checking notifications or quick reading, not deep management.
+
+7. Example UI Mockup (Text Representation)
+
+Header:
+[ Search (Ctrl+P) ...                                         ]  [ User: @Dev1 ]
+
+Body:
+| Activity | Explorer    | main.tsx (Feed)                            | Inspector      |
+| :---     | :---        | :---                                       | :---           |
+| [ Icon ] | FILTERS |                                            | DETAILS |
+| [ Icon ] | > React     |  1  import { Project } from 'users';       |                |
+| [ Icon ] | > Node      |  2                                         | Project_X |
+|          | > Rust      |  3  const Project_A = {                    | Owner: @Bob    |
+|          |             |  4     tags: ['Open Source', 'Easy'],      |                |
+|          | RECENT |  5     desc: "A clone of Twitter...",      | [ Clone Repo ] |
+|          |  # 8392     |  6     likes: 42                           |                |
+|          |  # 1102     |  7  };                                     | [ Like ]       |
+|          |             |  8                                         |                |
+|          |             |  9  // TODO: Needs help with UI            |                |
+|          |             |  10 const Project_B = { ... }              |                |

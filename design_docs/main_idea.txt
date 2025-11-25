@@ -1,0 +1,62 @@
+Design Document: "DevSignal" (Working Title)Date: October 26, 2023Status: Draft / 
+IdeationTech Stack: Vite + React, Firebase (Auth, Firestore, Hosting), GitHub API1. 
+Executive SummaryDevSignal is a web platform designed to bridge the gap between software
+ engineers seeking practical experience and open-source maintainers seeking contributors.
+  Unlike GitHub, which focuses on code storage and version control, DevSignal focuses on
+   project discovery, onboarding, and contribution recognition. It serves as a social
+    layer where engagement (likes, suggestions, code contributions) builds a verifiable 
+    "experience resume" for the user.2. Core PhilosophyThe "Extension" Rule: We do not 
+    host code. We do not host video. We link to GitHub and YouTube. We are the directory 
+    and the resume builder, not the warehouse.Desktop First: coding is done on computers.
+     The UI will be optimized for wide screens, code readability, and dashboard views, 
+     with functional but secondary mobile responsiveness.Onboarding is King: Projects 
+     are ranked/highlighted based on how accessible their "Getting Started" 
+     documentation is.3. User PersonasPersonaGoalPain PointThe Seeker (Junior/Unemployed
+      Dev)Wants to code, build a portfolio, and prove skills to employers.
+      Cannot find beginner-friendly open source issues; GitHub search is overwhelming.
+      The Maintainer (Project Owner)Needs bug fixes, features, or simply wants to show 
+      off a passion project.Hard to get traction; READMEs are often ignored; struggles
+       to find contributors.4. Key Features & FunctionalityA. The Project Feed (The 
+       "Showcase")A scrollable, card-based interface similar to a mix of Pinterest and 
+       a Job Board.Card Content: Project Title, Tech Stack (icons), "Help Wanted" vs. 
+       "Showcase" tag, and a 1-sentence elevator pitch.Filtering: Filter by language 
+       (JS, Python, Rust), difficulty level (Good First Issue), or category (Web, AI, 
+       Tooling).Media: If a YouTube demo link is provided, the card displays a thumbnail
+        or auto-plays the preview on hover.ShutterstockB. The Project "Pitch" PageWhen 
+        a user clicks a project, they see a view optimized for onboarding, not just 
+        reading code.The "Human" Readme: Fetches the README.md from GitHub but renders 
+        it with enhanced styling. It highlights a specific section: "How to run locally."
+        Status Indicators: Shows live stats via GitHub API (Open Issues, Last Commit Date)
+         to ensure the project is active.Suggestion Box: A feature allowing users to 
+         suggest non-code edits (e.g., "Your documentation is unclear here") without 
+         opening a formal Pull Request yet.C. Gamified User Profiles (The "Resume")
+         This is the core value proposition for the unemployed engineer.The XP 
+         System:Silver Interaction: Liked a project, offered a suggestion.Gold 
+         Interaction: Merged Pull Request (verified via GitHub API).Activity Graph:
+          A visual timeline of interactions on DevSignal + contributions on GitHub.
+          Badges: "Bug Hunter," "Documentation Wizard," "React Specialist."D. 
+          Authentication & IntegrationsLogin: Strictly GitHub OAuth. This reduces 
+          friction and allows immediate access to the user's repos for posting.
+          Data Sync: When a user posts a project, the app fetches the repo metadata
+           (stars, language, description) automatically to populate the form.
+           5. Technical ArchitectureFrontend (Vite + React)Build Tool: Vite (for 
+           speed).Framework: React (Functional components + Hooks).Styling: 
+           Tailwind CSS (recommended for rapid UI development and responsive grids)
+           .State Management: React Context or Zustand (keep it lightweight).
+           Markdown Rendering: react-markdown with remark-gfm to render GitHub-flavored
+            READMEs prettily.Backend (Firebase)Authentication: Firebase Auth
+             (GitHub Provider).Database: Cloud Firestore (NoSQL).API Functions: 
+             Firebase Cloud Functions (to handle secure GitHub API calls and webhook 
+             listeners).Hosting: Firebase Hosting.Data Model (Firestore Schema)users 
+             Collection:uid (string)githubHandle (string)skills (array)experiencePoints
+             
+              (number)contributions (sub-collection: referencing project IDs)projects
+               Collection:ownerId (ref)repoUrl (string)tags (array: "Help Wanted", 
+               "Showcase", "React", etc.)mediaLinks (array: YouTube, Imgur)interaction
+               Count (number)interactions Collection:type (string: "like", "suggestion")
+               fromUser (ref)toProject (ref)6. Development Roadmap (MVP)Phase 1: The
+                Core (Days 1-3)Set up Vite/React repo.Configure Firebase Auth with GitHub
+                .Create the "Post a Project" form (stores URL in Firestore).Phase 2: The
+                 Display (Days 4-7)Build the Feed UI.Implement the GitHub API fetcher 
+                 (to pull README content and display it).Create the Project Detail view.
+                 Phase 3: The Social Layer (Days 8-12)Implement "Likes" and "Suggestions."Build the User Profile page (displaying list of interacted projects).Phase 4: Optimization (Days 13-14)Add Tags/Filtering.Polish UI/UX (Dark mode is mandatory for devs!).7. Potential Challenges & SolutionsChallenge: Users spamming low-quality projects.Solution: Implement a "verified" tag for projects that have a minimum number of stars on GitHub or a "Community Approved" badge for projects that receive X number of likes on your platform.Challenge: API Rate Limits from GitHub.Solution: Use Firebase Cloud Functions to cache README data in Firestore. Only refetch from GitHub if the data is older than 24 hours or if the user manually hits "Refresh."
