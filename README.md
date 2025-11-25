@@ -1,4 +1,4 @@
-# DevSource (v0.1.0-alpha)
+# DevSignal (v0.1.0-alpha)
 
 The Open Source Discovery Engine. > A gamified platform connecting developers seeking experience with maintainers seeking contributors.
 
