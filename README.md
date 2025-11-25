@@ -1,6 +1,6 @@
 # DevSignal (v0.1.0-alpha)
 
-The Open Signal Discovery Engine. > A gamified platform connecting developers seeking experience with maintainers seeking contributors.
+The Open Source Discovery Engine. > A gamified platform connecting developers seeking experience with maintainers seeking contributors.
 
 ## 💻 The Concept
 
