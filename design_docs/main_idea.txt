@@ -59,4 +59,9 @@ Executive SummaryDevSignal is a web platform designed to bridge the gap between 
                 .Create the "Post a Project" form (stores URL in Firestore).Phase 2: The
                  Display (Days 4-7)Build the Feed UI.Implement the GitHub API fetcher 
                  (to pull README content and display it).Create the Project Detail view.
-                 Phase 3: The Social Layer (Days 8-12)Implement "Likes" and "Suggestions."Build the User Profile page (displaying list of interacted projects).Phase 4: Optimization (Days 13-14)Add Tags/Filtering.Polish UI/UX (Dark mode is mandatory for devs!).7. Potential Challenges & SolutionsChallenge: Users spamming low-quality projects.Solution: Implement a "verified" tag for projects that have a minimum number of stars on GitHub or a "Community Approved" badge for projects that receive X number of likes on your platform.Challenge: API Rate Limits from GitHub.Solution: Use Firebase Cloud Functions to cache README data in Firestore. Only refetch from GitHub if the data is older than 24 hours or if the user manually hits "Refresh."
+                 Phase 3: The Social Layer (Days 8-12)Implement "Likes" and "Suggestions."Build the User Profile page (displaying list of interacted projects).Phase 4: Optimization (Days 13-14)Add Tags/Filtering.Polish UI/UX (Dark mode is mandatory for devs!).7. Potential Challenges & SolutionsChallenge: Users spamming low-quality projects.Solution: Implement a "verified" tag for projects that have a minimum number of stars on GitHub or a "Community Approved" badge for projects that receive X number of likes on your platform.Challenge: API Rate Limits from GitHub.Solution: Use Firebase Cloud Functions to cache README data in Firestore. Only refetch from GitHub if the data is older than 24 hours or if the user manually hits "Refresh
+
+
+
+IMPORTANT: It is paramount that the information that it takes to get a 
+development environment set up is vieweable as fast as possible. 
